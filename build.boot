@@ -6,6 +6,7 @@
           :dependencies   '[[org.clojure/clojure "RELEASE"]
                             [ragtime "0.7.2"]
                             [org.clojure/java.jdbc "0.7.1"]
+                            [clj-http "3.7.0"]
                             [org.postgresql/postgresql "42.1.4"]
                             [conman "0.6.8"]
                             [honeysql "0.9.1"]
