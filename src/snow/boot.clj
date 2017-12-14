@@ -29,6 +29,17 @@
     (repl/rollback (config))
     fs))
 
+; (deftask gen-migrate
+;   "create a new migration"
+;   [name]
+;   (with-pre-wrap [fs]
+;     (let [curr (.format (java.text.SimpleDateFormat. "yyyyMMddHHmmss")
+;                         (java.util.Date.))
+;           name (str "migrations/" curr name)]
+;       (spit (str name ".up.sql") "-- Migrations go here")
+;       (spit (str name ".down.sql") "-- Rollbacks go here")
+;       (println "Migrations " name "generated"))))
+
 (deftask local-migrate []
   (comp  (environ :env (profile))
          (migrate)))
@@ -36,3 +47,13 @@
 (deftask local-rollback []
   (comp (environ :env (profile))
         (rollback)))
+
+
+
+
+
+
+
+
+
+

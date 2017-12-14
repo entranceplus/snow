@@ -12,6 +12,7 @@
                             [honeysql "0.9.1"]
                             [tailrecursion/boot.core "2.5.1"]
                             [environ "1.1.0"]
+                            [com.cemerick/friend "0.2.3"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
 (task-options!
