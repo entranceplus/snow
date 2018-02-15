@@ -3,45 +3,67 @@
             [conman.core :as conman]
             [honeysql.core :as sql]
             [environ.core :refer [env]]
-            [honeysql.helpers :as helpers :refer :all]
+            [honeysql.helpers :as helpers :refer :all :exclude [update]]
+            [honeysql-postgres.format :refer :all]
+            [honeysql-postgres.helpers :refer :all]))
             ;; [clojure.spec.alpha :as s]
-))
+
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
 (defn make-vec-if-not [maybe-vec]
-  (if ((complement seq?) maybe-vec)
+  (if-not (sequential? maybe-vec)
     (conj []  maybe-vec)
-(vec maybe-vec)))
+    maybe-vec))
 
 (defn query [db sqlmap]
   (jdbc/query db (-> sqlmap sql/build sql/format)))
 
 (defn execute! [db sqlmap]
   (jdbc/execute! db (let [sql (sql/format sqlmap)]
-                                (println sql)
-                                sql)))
+                         (println sql)
+                         sql)))
 
-(defn- prep-insert-data
-  "if you have not set id it will"
-  [data]
-  (mapv (fn [data]
-         (cond-> data
-           (nil? (:id data)) (assoc :id (uuid))))
-       (make-vec-if-not data)))
+(defn remove-nil
+  "remove the key from a map whose value is nil"
+  [map]
+  (->> map
+       (filter (fn [[k v]] ((complement nil?) v)))
+       (into {})))
 
 (defn add
-  "insert data into table"
-  [table data]
-  (if-let [rows (prep-insert-data data)]
-    (when ((complement empty?) rows)
-      (execute! (-> (insert-into table)
-                    (values rows)))
-      rows)))
+  "insert data into table, if a sequence of data is given then it is inserted in
+   batch mode then number of inserts are returned. If a single map is passed then
+   you get back the db representation with all columns"
+  [db table data]
+  (if (sequential? data)
+    (execute! db (-> (insert-into table)
+                     (values (mapv #'remove-nil data))))
+    (->> data
+         remove-nil
+         (jdbc/insert! db table)
+         first)))
+
+;; (add voidwalker.content.core/db
+;;               :posts
+;;               {:url "fwe" :tags "fwe" :content "some" :title "fwefwef"})
+
+;; (update voidwalker.content.core/db
+;;         :posts
+;;         {:set {:url "fwe" :title "fwefwef"}
+;;          :where [:= :id 13]})
+
+
+(defn update
+  "update data in table"
+  [db table update-map]
+  (execute! db (-> (helpers/update table)
+                   (sset (:set update-map))
+                   (where (:where update-map)))))
 
 (def db-spec
   {:classname   "org.postgresql.Driver"
-   :dbtype "postgres"
+   :dbtype "postgresql"
    :subprotocol "postgresql"})
 
 (defn get-db-spec-from-env
@@ -57,5 +79,6 @@
                     :password (or (env :dbpassword) password)
                     :host (or (env :dbhost)
                               host
-                              "127.0.0.1")})))
+                              "127.0.0.1")}))
+  )
 

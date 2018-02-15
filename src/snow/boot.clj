@@ -12,7 +12,7 @@
                (read-edn "profiles.edn")))
 
 (defn config []
-  {:datastore  (jdbc/sql-database (db/get-db-spec-from-env :config (profile)))
+  {:datastore  (jdbc/sql-database (db/get-db-spec-from-env))
    :migrations (jdbc/load-resources "migrations")})
 
 (deftask migrate
@@ -40,13 +40,13 @@
 ;       (spit (str name ".down.sql") "-- Rollbacks go here")
 ;       (println "Migrations " name "generated"))))
 
-(deftask local-migrate []
-  (comp  (environ :env (profile))
-         (migrate)))
+;; (deftask local-migrate []
+;;   (comp  (environ :env (profile))
+;;          (migrate)))
 
-(deftask local-rollback []
-  (comp (environ :env (profile))
-        (rollback)))
+;; (deftask local-rollback []
+;;   (comp (environ :env (profile))
+;;         (rollback)))
 
 
 

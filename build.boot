@@ -9,6 +9,7 @@
                             [clj-http "3.7.0"]
                             [org.postgresql/postgresql "42.1.4"]
                             [conman "0.6.8"]
+                            [nilenso/honeysql-postgres "0.2.3"]
                             [honeysql "0.9.1"]
                             [tailrecursion/boot.core "2.5.1"]
                             [environ "1.1.0"]
