@@ -12,7 +12,9 @@
                             [nilenso/honeysql-postgres "0.2.3"]
                             [honeysql "0.9.1"]
                             [tailrecursion/boot.core "2.5.1"]
+                            [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
+                            [org.danielsz/system "0.4.2-SNAPSHOT"]
                             [com.cemerick/friend "0.2.3"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
