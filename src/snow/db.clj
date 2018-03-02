@@ -74,11 +74,11 @@
   (let [{:keys [dbuser db password host]} config]
     (println "config passed is " config)
     (println "Trying environment variables" (env :dbuser))
-    (merge db-spec {:user (or (env :dbuser) dbuser)
-                    :dbname (or (env :dbname) db)
-                    :password (or (env :dbpassword) password)
-                    :host (or (env :dbhost)
-                              host
+    (merge db-spec {:user (or dbuser (env :dbuser))
+                    :dbname (or db (env :dbname))
+                    :password (or password (env :dbpassword))
+                    :host (or host
+                              (env :dbhost)
                               "127.0.0.1")}))
   )
 
