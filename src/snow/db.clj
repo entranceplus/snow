@@ -5,9 +5,14 @@
             [environ.core :refer [env]]
             [honeysql.helpers :as helpers :refer :all :exclude [update]]
             [honeysql-postgres.format :refer :all]
-            [honeysql-postgres.helpers :refer :all]))
-            ;; [clojure.spec.alpha :as s]
+            [com.wsscode.pathom.core :as p]
+            [walkable.sql-query-builder :as sqb]
+            [honeysql-postgres.helpers :refer :all]
+            [clojure.spec.alpha :as s]))
 
+(require '[clojure.spec.alpha :as s])
+(require '[expound.alpha :as expound])
+(set! s/*explain-out* expound/printer)
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
@@ -19,10 +24,20 @@
 (defn query [db sqlmap]
   (jdbc/query db (-> sqlmap sql/build sql/format)))
 
-(defn execute! [db sqlmap]
-  (jdbc/execute! db (let [sql (sql/format sqlmap)]
-                         (println sql)
-                         sql)))
+(defn execute!
+  ([db sqlmap]
+   (jdbc/execute! db (let [sql (sql/format sqlmap)]
+                        (println sql)
+                        sql)))
+  ([db]))
+
+(def schema {:idents {:users/by-id :users/id
+                      :users/all "users"}
+             :columns #{:users/username}})
+
+(def pathom-parse (p/parse {::p/plugins [(p/env-plugin
+                                           {::p/reader [sqb/pull-entities
+                                                        p/map-reader]})]}))
 
 (defn remove-nil
   "remove the key from a map whose value is nil"
