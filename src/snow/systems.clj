@@ -59,3 +59,8 @@
 
 (defn stop-systems [systems]
   (map #(component/stop %) systems))
+
+(defn get-port [config]
+  (let [port (config :http-port)]
+    (cond-> port
+      (string? port) Integer.)))

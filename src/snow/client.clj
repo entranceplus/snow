@@ -15,11 +15,11 @@
 
 (defn get
   "simple json request"
-  ([url] (get nil))
+  ([url] (get url nil))
   ([url opts]
    (-> url
        (client/get (merge {:as :json
-                           :coerce :always
+                           ; :coerce :always
                            :throw-exceptions false} opts))
        :body)))
 
@@ -30,7 +30,6 @@
                {:content-type :json
                 :accept :json
                 :as :json
-                :coerce :always
                 :throw-exceptions false
                 :body (cond-> body
                         ((complement string?) body) write-json)
