@@ -14,6 +14,7 @@
                             [tailrecursion/boot.core "2.5.1"]
                             [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
+                            [adzerk/bootlaces "0.1.13"]
                             [metosin/muuntaja "0.5.0"]
                             [org.danielsz/system "0.4.2-SNAPSHOT"]
                             [com.cemerick/friend "0.2.3"]
@@ -27,6 +28,10 @@
       :scm         {:url "https://github.com/yourname/snow"}
       :license     {"Eclipse Public License"
                     "http://www.eclipse.org/legal/epl-v10.html"}})
+
+(require '[adzerk.bootlaces :refer :all])
+(bootlaces! version)                    
+
 
 (deftask build
   "Build and install the project locally."
