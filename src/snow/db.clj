@@ -5,14 +5,12 @@
             [environ.core :refer [env]]
             [honeysql.helpers :as helpers :refer :all :exclude [update]]
             [honeysql-postgres.format :refer :all]
-            [com.wsscode.pathom.core :as p]
-            [walkable.sql-query-builder :as sqb]
             [honeysql-postgres.helpers :refer :all]
             [clojure.spec.alpha :as s]))
 
-(require '[clojure.spec.alpha :as s])
-(require '[expound.alpha :as expound])
-(set! s/*explain-out* expound/printer)
+; (require '[clojure.spec.alpha :as s])
+; (require '[expound.alpha :as expound])
+; (set! s/*explain-out* expound/printer)
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
@@ -31,14 +29,14 @@
                         sql)))
   ([db]))
 
-(def schema {:idents {:users/by-id :users/id
-                      :users/all "users"}
-             :columns #{:users/username}})
-
-(def pathom-parse (p/parse {::p/plugins [(p/env-plugin
-                                           {::p/reader [sqb/pull-entities
-                                                        p/map-reader]})]}))
-
+; (def schema {:idents {:users/by-id :users/id
+;                       :users/all "users"}
+;              :columns #{:users/username}})
+;
+; (def pathom-parse (p/parse {::p/plugins [(p/env-plugin
+;                                            {::p/reader [sqb/pull-entities
+;                                                         p/map-reader]})]}))
+;
 (defn remove-nil
   "remove the key from a map whose value is nil"
   [map]
@@ -86,12 +84,13 @@
    if the env variables are not found then tries the
    passed config"
   [& {:keys [config]}]
-  (let [{:keys [dbuser db password host]} config]
+  (let [{:keys [dbuser db password host port]} config]
     (println "config passed is " config)
     (println "Trying environment variables" (env :dbuser))
     (merge db-spec {:user (or dbuser (env :dbuser))
                     :dbname (or db (env :dbname))
                     :password (or password (env :dbpassword))
+                    :port (or port (env :dbport) 5432)
                     :host (or host
                               (env :dbhost)
                               "127.0.0.1")})))
