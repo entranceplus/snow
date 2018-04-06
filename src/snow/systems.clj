@@ -44,11 +44,13 @@
 (defn start-systems [systems & {:keys [prod?]}]
   (doall (map (fn [{:keys [snow.systems/system-fn snow.systems/config]}]
                 (println "Starting a system with config " config " system-fn is " system-fn)
-                (safely (component/start (gen-system system-fn config :prod? prod?))
-                        :on-error
-                        :max-retry 20
-                        :retry-delay [:random-exp-backoff :base 3000 :+/- 0.50]
-                        :message (str "System start failed for config " config)))
+                (if prod?
+                  (safely (component/start (gen-system system-fn config :prod? prod?))
+                          :on-error
+                          :max-retry 20
+                          :retry-delay [:random-exp-backoff :base 3000 :+/- 0.50]
+                          :message (str "System start failed for config " config))
+                  (component/start (gen-system system-fn config :prod? prod?))))
               systems)))
 
 (s/fdef stop-system

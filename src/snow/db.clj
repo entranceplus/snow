@@ -79,6 +79,4 @@
                     :password (or password (env :dbpassword))
                     :host (or host
                               (env :dbhost)
-                              "127.0.0.1")}))
-  )
-
+                              "127.0.0.1")})))
