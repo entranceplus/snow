@@ -6,9 +6,7 @@
             [honeysql.helpers :as helpers :refer :all :exclude [update]]
             [honeysql-postgres.format :refer :all]
             [honeysql-postgres.helpers :refer :all]
-            [walkable.sql-query-builder :as sqb]
-            [honeysql-postgres.helpers :refer :all]
-            [clojure.spec.alpha :as s]))
+            [honeysql-postgres.helpers :refer :all]))
 
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 

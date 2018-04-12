@@ -42,3 +42,18 @@
                   :coerce :always
                   :throw-exceptions false
                   :headers headers}))
+
+(defn restclient
+  ([base-url]
+   (restclient base-url {}))
+  ([base-url {:keys [api-key]}]
+   (fn [request-type url & {:keys [body]}]
+     (let [headers (when api-key {:authorization (str "Bearer " api-key)})]
+       (case request-type
+         :get (get (str base-url url)
+                   {:headers headers})
+         :post (post (str base-url url)
+                     :body body
+                     :headers headers)
+         :delete (delete (str base-url url)
+                         :headers headers))))))

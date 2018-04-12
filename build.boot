@@ -31,7 +31,7 @@
                     "http://www.eclipse.org/legal/epl-v10.html"}})
 
 (require '[adzerk.bootlaces :refer :all])
-(bootlaces! version)                    
+(bootlaces! version)
 
 
 (deftask build
