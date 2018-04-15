@@ -1,7 +1,7 @@
 (def project 'snow)
 (def version "0.1.0-SNAPSHOT")
 
-(set-env! :resource-paths #{"resources" "src"}
+(set-env! :resource-paths #{"src"}
           :source-paths   #{"test"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
                             [ragtime "0.7.2"]
@@ -40,3 +40,9 @@
   (comp (pom) (jar) (install)))
 
 (require '[adzerk.boot-test :refer [test]])
+
+
+(deftask publish []
+  (comp
+   (build-jar)
+   (push-snapshot)))
