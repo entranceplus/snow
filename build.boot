@@ -41,6 +41,7 @@
 
 (require '[adzerk.boot-test :refer [test]])
 
+(deftask deps [])
 
 (deftask publish []
   (comp
