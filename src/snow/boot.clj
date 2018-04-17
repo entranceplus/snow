@@ -1,15 +1,11 @@
 (ns snow.boot
+  (:gen-class)
   (:require [ragtime.jdbc :as jdbc]
             [ragtime.repl :as repl]
             [snow.db :as db]
             [clojure.edn :as edn]
             [environ.boot :refer [environ]]
             [boot.core :refer [deftask with-pre-wrap]]))
-
-(def read-edn (comp edn/read-string slurp))
-
-(def profile (fn []
-               (read-edn "profiles.edn")))
 
 (defn config []
   {:datastore  (jdbc/sql-database (db/get-db-spec-from-env))

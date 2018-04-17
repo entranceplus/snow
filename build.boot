@@ -19,6 +19,7 @@
                             [metosin/muuntaja "0.5.0"]
                             [org.danielsz/system "0.4.2-SNAPSHOT"]
                             [com.cemerick/friend "0.2.3"]
+                            [boot "2.7.2"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
 (task-options!
