@@ -11,7 +11,8 @@
 
 (defn make-vec-if-not
   [maybe-vec]
-  "deprecated please refer to snow.util/make-vec-if-not"
   (if-not (sequential? maybe-vec)
     (conj []  maybe-vec)
     maybe-vec))
+
+(defn uuid [] (str (java.util.UUID/randomUUID)))

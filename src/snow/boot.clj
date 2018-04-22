@@ -2,13 +2,13 @@
   (:gen-class)
   (:require [ragtime.jdbc :as jdbc]
             [ragtime.repl :as repl]
-            [snow.db :as db]
+            [snow.mysql :as mysql]
             [clojure.edn :as edn]
             [environ.boot :refer [environ]]
             [boot.core :refer [deftask with-pre-wrap]]))
 
 (defn config []
-  {:datastore  (jdbc/sql-database (db/get-db-spec-from-env))
+  {:datastore  (jdbc/sql-database (mysql/get-db-spec-from-env))
    :migrations (jdbc/load-resources "migrations")})
 
 (deftask migrate
