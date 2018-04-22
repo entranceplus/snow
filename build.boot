@@ -15,14 +15,16 @@
                             [tailrecursion/boot.core "2.5.1"]
                             [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
+                            [boot-environ "1.1.0"]
                             [adzerk/bootlaces "0.1.13"]
                             [org.clojure/core.async "0.4.474"]
-                            [io.replikativ/konserve "0.5-beta1"]
+                            [io.replikativ/konserve "0.5-beta2"]
                             [org.clojure/test.check "0.9.0" :scope "test"]
                             [metosin/muuntaja "0.5.0"]
                             [org.danielsz/system "0.4.2-SNAPSHOT"]
                             [com.cemerick/friend "0.2.3"]
-                            [boot "2.7.2"]
+                            [boot/core "2.7.2"]
+                            [org.clojure/tools.nrepl "0.2.12"]
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
 (task-options!

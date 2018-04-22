@@ -20,6 +20,7 @@
   (-> db-path
       io/as-file
       io/make-parents)
+  (delete-store db-path)
   (reset! conn (<!! (new-fs-store db-path)))
   (f)
   (delete-store db-path))
@@ -28,27 +29,35 @@
 
 (use-fixtures :each db-fixture)
 
-;; (def eid "c69953d3-309a-469c-a2d6-55e599e4bd15")
+;; (def eid  "e6c994c7-db8c-41f2-8b1e-b88d6ed3991f")
 
-;; (require '[snow.util :as u])
+(defn test-update [entity]
+  (let [e (assoc entity :name "antash")]
+    (update-entity  @conn ::test e)
+    (= (get-entity @conn ::test (:id entity)) e)))
 
-;; (def id (snow.util/uuid))
 
-;; (<!! (k/assoc-in @conn [::test id] entity))
-
-;; (<!! (k/get-in @conn [::test id]))
 (deftest persistence-test
   (testing "crud entity"
-    (let [store @conn
-          eid   (-> @conn
+    (let [eid   (-> @conn
                     (add-entity ::test entity)
                     :id)]
+      ;; Add
       (is (some? eid))
+
+      ;; Get by id
       (is (= (get-entity @conn ::test eid)
-             entity))
-      (is (= (count (get-entity store ::test))
-             1))
-      (delete-entity store ::test eid)
-      (is (= (count (get-entity store ::test))
+             (assoc entity :id eid)))
+
+      ;; Get all
+      (let [es (get-entity @conn ::test)]
+        (is (= (count es) 1))
+        (is (every? :id es)))
+
+      ;; delete by id
+      (delete-entity @conn ::test eid)
+
+      ;; count after delete
+      (is (= (count (get-entity @conn ::test))
              0)))))
 
