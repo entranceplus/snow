@@ -1,5 +1,5 @@
 (def project 'snow)
-(def version "0.1.0-SNAPSHOT")
+(def version "0.1.1")
 
 (set-env! :resource-paths #{"src"}
           :source-paths   #{"test"}
@@ -16,7 +16,7 @@
                             [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
                             [boot-environ "1.1.0"]
-                            [adzerk/bootlaces "0.1.13"]
+                            [entranceplus/bootlaces "0.1.14"]
                             [org.clojure/core.async "0.4.474"]
                             [io.replikativ/konserve "0.5-beta2"]
                             [org.clojure/test.check "0.9.0" :scope "test"]
@@ -52,4 +52,4 @@
 (deftask publish []
   (comp
    (build-jar)
-   (push-snapshot)))
+   (push-release)))
