@@ -1,5 +1,5 @@
 (def project 'snow)
-(def version "0.1.2")
+(def version "0.2.0")
 
 (set-env! :resource-paths #{"src"}
           :source-paths   #{"test"}
@@ -9,6 +9,10 @@
                             [clj-http "3.7.0"]
                             [org.postgresql/postgresql "42.1.4"]
                             [conman "0.6.8"]
+                            [org.clojure/core.async "0.4.474"]
+                            [com.taoensso/sente "1.12.0"]
+                            [re-frame "0.10.5"]
+                            [compojure "1.6.0"]
                             [expound "0.5.0"]
                             [nilenso/honeysql-postgres "0.2.3"]
                             [honeysql "0.9.1"]
@@ -16,6 +20,7 @@
                             [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
                             [boot-environ "1.1.0"]
+                            [org.immutant/immutant "2.1.9"]
                             [entranceplus/bootlaces "0.1.14"]
                             [org.clojure/core.async "0.4.474"]
                             [io.replikativ/konserve "0.5-beta2"]
