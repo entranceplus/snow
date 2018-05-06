@@ -24,74 +24,78 @@
 
 (rf/reg-event-db
  ::delete
- (fn [db [_ {:keys [filename key]}]]
-   (println "keys are " filename key)
-   (dissoc-in db [::files key filename])))
+ (fn [db [_ {:keys [filename id type db-key]}]]
+   (dissoc-in db [db-key id type filename])))
 
-(defn file-view [{:keys [filename key] :as opts}]
+(defn file-view [{:keys [filename id type] :as opts}]
   (println "opts is " opts)
   [:div
    [:div>span.icon.is-large
     [:i.fab.fa-css3-alt.fa-3x]]
-   [:div (name filename)
+   [:div (cond-> filename
+           (keyword? filename) name)
     [:span.icon.is-medium {:on-click #(rf/dispatch [::delete opts])}
      [:i.fas.fa-trash-alt]]]])
 
-(rf/reg-sub ::all-files (fn [db [_ _]] (-> db ::files)))
+(rf/reg-sub ::files            
+            (fn [db [_ db-key id type]] (get-in db [db-key id type])))
 
-(rf/reg-sub ::files
-            (fn [_ _] (rf/subscribe [::all-files]))
-            (fn [files [_ k]] (get files k)))
-
-(defn file-list [k]
-  (println "key is " k)
+(defn file-list [{:keys [id type db-key]}]
+  (println "id type " id type)
   [:div.column>div.columns
-   (for [n  (-> [::files k] <sub keys)]
-     [:div.column {:key n} [file-view  {:filename n
-                                        :key k}]])])
+   (cond->> @(rf/subscribe [::files db-key id type])
+     some? (map (fn [[n _]]
+                  [:div.column {:key n} [file-view  {:filename n
+                                                     :id id
+                                                     :db-key db-key
+                                                     :type type}]])))])
 
 
 ;;;;;;;;;;;;;;;;
 ;; input-view ;;
 ;;;;;;;;;;;;;;;;
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::new
- (fn [db [_ [id {:keys [file-content name]}]]]
-   (assoc-in db [::files id name] file-content)))
+ (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch]}]]]
+   (cond-> {:db (assoc-in db [:articles id type name] file-content)}
+     (vector? dispatch) (merge {:dispatch dispatch}))))
 
 (defn get-files [e]
   (array-seq (.. e -target -files)))
 
 (defn read-file
-  "read file and dispatch an event of [:file-content {:id :content}]"
-  [file id]
+  "read file and dispatch an event of [:file-content {:id :content}],
+   will apply a process function if provided"
+  [file  {:keys [id type process dispatch]}]
   (println "Trying to read file name " (.-name file))
   (let [reader (js/FileReader.)]
     (gobj/set reader
               "onload"
               (fn [e]
                 (println "event called ")
-                (rf/dispatch [::new [id {:file-content (.. e -target -result)
-                                         :name (.-name file)}]])))
+                (rf/dispatch [::new [type id {:file-content (cond-> (.. e -target -result)
+                                                              (fn? process) process)
+                                              :name (.-name file)
+                                              :dispatch dispatch}]])))
     (.readAsText reader file)))
 
 
-(defn file-input [{:keys [placeholder id]}]
+(defn file-input [m]
   [:div.field.file.is-boxed>label.file-label
    [:div.field>div.control
     [:input.input.file-input
      {:type "file"
-      :on-change (fn [e] (-> e get-files first (read-file id)))}]
+      :on-change (fn [e] (-> e get-files first (read-file m)))}]
     [:span.file-cta
      [:span.file-icon>i.fas.fa-upload]
-     [:span.file-label placeholder]]]])
+     [:span.file-label (:placeholder m)]]]])
 
 ;;;;;;;;;;;;;;;;
 ;; combo view ;;
 ;;;;;;;;;;;;;;;;
 
-(defn view [{:keys [id placeholder] :as m}]
+(defn view [{:keys [id placeholder process type db-key dispatch] :as m}]
   [:div.columns
    [:div.column [file-input m]]
-   [:div.column [file-list id]]])
+   [:div.column [file-list m]]])

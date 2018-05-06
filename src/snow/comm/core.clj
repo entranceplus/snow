@@ -11,35 +11,28 @@
 ;; reframe on clojure  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (nil?  (rf/dispatch [::new {::type :snow.db/add
-;;                             :snow.db/entity-key ::test
-;;                             :snow.db/entity {:test "karega nau"}}]))
-
-(defmulti request-handler #(-> % :data ::type))                          
-
-(rf/reg-fx ::request request-handler)
 
 ;; {::type :snow.db/add
 ;;  :snow.db/entity-key :voidwalker.content/post
 ;;  :snow.db/entity :article-data
-;;  :dispatch [::articles-updated]}    
+;;  :dispatch [::articles-updated]}
 
 (rf/reg-event-fx
-  ::trigger
-  [(rf/inject-cofx :system)]
-  (fn [{:keys [db system]} [_ data]]
+ ::trigger
+ [(rf/inject-cofx :system)]
+ (fn [{:keys [db system]} [_ data]]
    {::request {:data data
-               :component system}           
+               :component system}
     :db db}))
 
-(rf/reg-event-db 
+(rf/reg-event-db
  :chsk/ws-ping
  (fn [db _]
   (println "ping received")
   db))
 
-(rf/reg-event-fx 
- ::broadcast 
+(rf/reg-event-fx
+ ::broadcast
  (fn [{db :db} [_ data]]
   {::broadcast data
    :db db}))
@@ -48,14 +41,7 @@
   (println "connected uids are " connected-uids)
   (doseq [uid (:any @connected-uids)]
     (println "Sending message to client")
-    (chsk-send! uid data)))
-
-;; (rf/dispatch [::trigger {::type :snow.db/add
-;;                          :data 90}])
-
-; (rf/dispatch [::broadcast [::data 100]])
-
-; (-> system.repl/system :comm :comm :connected-uids)
+    (chsk-send! uid [::data data])))
 
 (defn event-msg-handler [component]
   (fn [ev-msg]
@@ -70,23 +56,22 @@
 (defn start-sente [event-msg-handler]
   (component/start (new-channel-socket-server event-msg-handler (get-sch-adapter) {:wrap-component? true})))
 
-(defrecord Comm [event-msg-handler broadcast]
+(defrecord Comm [event-msg-handler broadcast request-handler init-data]
   component/Lifecycle
   (start [component]
-    (let [{:keys [chsk-send! connected-uids] :as sente} (start-sente event-msg-handler)]     
+    (let [{:keys [chsk-send! connected-uids] :as sente} (start-sente event-msg-handler)]
       (rf/reg-fx ::broadcast (partial broadcast chsk-send! connected-uids))
+      (rf/reg-fx ::request request-handler)
       (rf/reg-cofx :system (fn [coeffects]
-                              (assoc coeffects :system component))) 
-      (assoc component :comm sente)))     
+                             (assoc coeffects :system component))) 
+      (assoc component :comm sente)))
   (stop [component]
     (if-let [sente (:sente component)]
       (do (component/stop sente)
           (dissoc component :comm))
       component)))
 
-(defn new-comm [event-msg-handler broadcast]
+(defn new-comm [event-msg-handler broadcast request-handler]
   (map->Comm {:event-msg-handler event-msg-handler
+              :request-handler request-handler
               :broadcast broadcast}))
-  
-
-

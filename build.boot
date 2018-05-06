@@ -1,10 +1,10 @@
 (def project 'snow)
-(def version "0.2.0")
+(def version "0.2.2")
 
 (set-env! :resource-paths #{"src"}
           :source-paths   #{"test"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
-                            [ragtime "0.7.2"]
+                            [ragtime "0.7.2"] 
                             [org.clojure/java.jdbc "0.7.1"]
                             [clj-http "3.7.0"]
                             [org.postgresql/postgresql "42.1.4"]
@@ -19,6 +19,8 @@
                             [tailrecursion/boot.core "2.5.1"]
                             [com.brunobonacci/safely "0.5.0-alpha3"]
                             [environ "1.1.0"]
+                            [day8.re-frame/http-fx "0.1.3"]
+                            [day8.re-frame/re-frame-10x "0.3.3-react16"]
                             [boot-environ "1.1.0"]
                             [org.immutant/immutant "2.1.9"]
                             [entranceplus/bootlaces "0.1.14"]
