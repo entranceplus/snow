@@ -19,9 +19,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: snow-{{checksum "build.boot"}}
-      - run: clojure -Sdeps
+          key: snow-{{checksum "deps.edn"}}
+      - run: clojure -Atest
       - save_cache:
           paths:
             - ~/.m2
-          key: snow-{{checksum "build.boot"}}
+          key: snow-{{checksum "deps.edn"}}

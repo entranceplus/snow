@@ -35,4 +35,8 @@
                                       :sha "d492e97259c013ba401c5238842cd3445839d020"}
         cider/cider-nrepl {:mvn/version "0.18.0-SNAPSHOT"}
         org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
- :paths ["src"]}
+ :paths ["src"]
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                                          :sha "5fb4fc46ad0bf2e0ce45eba5b9117a2e89166479"}}
+                  :main-opts ["-m" "cognitect.test-runner"]}}}
