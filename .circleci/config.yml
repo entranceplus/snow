@@ -20,7 +20,7 @@ jobs:
       - checkout
       - restore_cache:
           key: snow-{{checksum "build.boot"}}
-      - run: clj -Sdeps
+      - run: clojure -Sdeps
       - save_cache:
           paths:
             - ~/.m2
