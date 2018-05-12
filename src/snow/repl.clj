@@ -4,7 +4,11 @@
             [defn-spec.core :as ds]
             [clojure.spec.alpha :as s]
             [clojure.tools.deps.alpha.repl :refer [add-lib]]
+            [clojure.tools.nrepl.server :as nrepl]
+            [cider.nrepl :refer [cider-nrepl-handler]]
             [snow.util :as u]))
+
+(def config (read-edn "profiles.edn"))
 
 (def state (atom {}))
 
@@ -33,3 +37,9 @@
                     (-> fn
                        (sys-map config)
                        u/make-vec-if-not)))))
+
+
+(defn start-nrepl []
+  (nrepl/start-server :port (or (:repl-port config)
+                               9001)
+                      :handler cider-nrepl-handler))
