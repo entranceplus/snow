@@ -1,16 +1,21 @@
 (ns snow.repl
   (:require [snow.systems :as sys]
             [snow.env :refer [read-edn]]
+            [taoensso.timbre.appenders.core :as appenders]
             [defn-spec.core :as ds]
             [clojure.spec.alpha :as s]
             [clojure.tools.deps.alpha.repl :refer [add-lib]]
             [clojure.tools.nrepl.server :as nrepl]
             [cider.nrepl :refer [cider-nrepl-handler]]
+            [taoensso.timbre :as timbre]
             [snow.util :as u]))
 
 (def config (read-edn "profiles.edn"))
 
 (def state (atom {}))
+
+(timbre/merge-config!
+ {:appenders {:spit (appenders/spit-appender {:fname (:log config)})}})
 
 (defn system []
   (-> @state ::sys/repl first))
@@ -22,7 +27,7 @@
   (swap! state assoc ::sys/repl (sys/start-systems config-map)))
 
 (defn stop! []
-  (sys/stop-systems (get ::sys/repl @state)))
+  (sys/stop-systems (get @state ::sys/repl)))
 
 (defn sys-map [f config]
   {::sys/system-fn f

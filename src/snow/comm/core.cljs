@@ -6,6 +6,7 @@
              [taoensso.sente  :as sente :refer (cb-success?)]
              [re-frame.core :as rf]))
 
+
 ;; websocket setup
 (defn start-socket []
   (println "connecting to ws")
@@ -37,7 +38,7 @@
                 (if (sente/cb-success? reply)
                   (do (println "success sending msg")
                       (when (vector? on-success) (rf/dispatch on-success)))
-                  (do (println "error sending msg")
+                  (do (println "error sending msg " reply)
                       (when (vector? on-failure) (rf/dispatch on-failure)))))))
 
 ;; (rf/dispatch [::trigger {:snow.comm.core/type :snow.db/add
@@ -81,10 +82,8 @@
  :chsk/state
  (fn [{db :db} [_ {:as ev-msg :keys [?data]}]]
    (let [[old-state-map new-state-map] (have vector? ?data)]
-     (if (:first-open? new-state-map)
-       (->output! "Channel socket successfully established!: %s" new-state-map)
-       (->output! "Channel socket state change: %s"              new-state-map))
-     {:db db})))
+     (println "socket state change " new-state-map)
+     {:db (assoc db ::connected (:open? new-state-map))})))
 
 (def data "ok")
 
@@ -94,12 +93,14 @@
 (defonce router_ (atom nil))
 (defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
 (defn start-router! []
+  (println "Starting router ")
   (stop-router!)
   (let [socket (start-socket)]
     (reset! router_
             (sente/start-client-chsk-router!
              (:ch-recv socket) event-msg-handler))
     (rf/reg-fx ::request (partial query-handler (:send-fn socket)))))
+
 
 
 (defn start! [] (start-router!))

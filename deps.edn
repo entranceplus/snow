@@ -31,9 +31,12 @@
         com.cemerick/friend {:mvn/version "0.2.3"}
         boot/core {:mvn/version "2.7.2"}
         defn-spec {:mvn/version "0.1.1"}
+        funcool/bide {:mvn/version "1.6.0"}
+        com.taoensso/timbre {:mvn/version "4.10.0"}
         org.clojure/tools.deps.alpha {:git/url "https://github.com/clojure/tools.deps.alpha.git"
                                       :sha "d492e97259c013ba401c5238842cd3445839d020"}
         cider/cider-nrepl {:mvn/version "0.18.0-SNAPSHOT"}
+        org.clojure/tools.logging {:mvn/version "0.4.1"}
         org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
  :paths ["src"]
  :aliases {:test {:extra-paths ["test"]

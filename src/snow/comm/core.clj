@@ -2,10 +2,12 @@
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
             [taoensso.sente :as sente]
+            [taoensso.timbre :as timbre :refer [info]]
             [compojure.core :refer [routes GET POST]]
             [com.stuartsierra.component :as component]
             [system.components.sente :refer [new-channel-socket-server]]
-            [taoensso.sente.server-adapters.immutant      :refer (get-sch-adapter)]))
+            [clojure.tools.logging :as log]
+            [taoensso.sente.server-adapters.immutant :refer (get-sch-adapter)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; reframe on clojure  ;;
@@ -40,18 +42,18 @@
 (defn broadcast [chsk-send! connected-uids data]
   (println "connected uids are " connected-uids)
   (doseq [uid (:any @connected-uids)]
-    (println "Sending message to client")
+    (info "Sending message to client")
     (chsk-send! uid [::data data])))
 
 (defn event-msg-handler [component]
   (fn [ev-msg]
-    (println "recevied a message ev-msg " (:event ev-msg))
+    (info "recevied a message ev-msg " (:event ev-msg))
     (rf/dispatch (:event ev-msg))))
 
-(defn sente-routes [{{{:keys [ring-ajax-get-or-ws-handshake ring-ajax-post]} :comm} :comm}]
+(defn sente-routes [{{{:keys [ring-ajax-get-or-ws-handshake ring-ajax-post]} :comm} ::comm}]
   (routes
-    (GET  "/chsk" req (ring-ajax-get-or-ws-handshake req))
-    (POST "/chsk" req (ring-ajax-post                req))))
+   (GET  "/chsk" req (ring-ajax-get-or-ws-handshake req))
+   (POST "/chsk" req (ring-ajax-post                req))))
 
 (defn start-sente [event-msg-handler]
   (component/start (new-channel-socket-server event-msg-handler (get-sch-adapter) {:wrap-component? true})))
