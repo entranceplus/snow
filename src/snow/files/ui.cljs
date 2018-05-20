@@ -24,8 +24,8 @@
 
 (rf/reg-event-db
  ::delete
- (fn [db [_ {:keys [filename id type db-key]}]]
-   (dissoc-in db [db-key id type filename])))
+ (fn [db [_ {:keys [filename id type]}]]
+   (dissoc-in db [id type filename])))
 
 (defn file-view [{:keys [filename id type] :as opts}]
   (println "opts is " opts)
@@ -38,16 +38,15 @@
      [:i.fas.fa-trash-alt]]]])
 
 (rf/reg-sub ::files            
-            (fn [db [_ db-key id type]] (get-in db [db-key id type])))
+            (fn [db [_ id type]] (get-in db [id type])))
 
-(defn file-list [{:keys [id type db-key]}]
+(defn file-list [{:keys [id type]}]
   (println "id type " id type)
   [:div.column>div.columns
-   (cond->> @(rf/subscribe [::files db-key id type])
+   (cond->> @(rf/subscribe [::files id type])
      some? (map (fn [[n _]]
                   [:div.column {:key n} [file-view  {:filename n
                                                      :id id
-                                                     :db-key db-key
                                                      :type type}]])))])
 
 
@@ -58,7 +57,7 @@
 (rf/reg-event-fx
  ::new
  (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch]}]]]
-   (cond-> {:db (assoc-in db [:articles id type name] file-content)}
+   (cond-> {:db (assoc-in db [id type name] file-content)}
      (vector? dispatch) (merge {:dispatch dispatch}))))
 
 (defn get-files [e]
@@ -95,7 +94,7 @@
 ;; combo view ;;
 ;;;;;;;;;;;;;;;;
 
-(defn view [{:keys [id placeholder process type db-key dispatch] :as m}]
+(defn view [{:keys [id placeholder process type dispatch] :as m}]
   [:div.columns
    [:div.column [file-input m]]
    [:div.column [file-list m]]])

@@ -14,6 +14,8 @@
 
 (def state (atom {}))
 
+(def add-dep add-lib)
+
 (timbre/merge-config!
  {:appenders {:spit (appenders/spit-appender {:fname (:log config)})}})
 
