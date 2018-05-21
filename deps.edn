@@ -7,8 +7,8 @@
         conman {:mvn/version "0.6.8"}
         org.clojure/core.async {:mvn/version "0.4.474"}
         com.taoensso/sente {:mvn/version "1.12.0"}
-        re-frame {;; :mvn/version "0.10.5"
-                  :local/root "../re-frame"
+        re-frame {:mvn/version "0.10.6-SNAPSHOT"
+                  ;;:local/root "../re-frame"
                   }
         expound {:mvn/version "0.5.0"}
         nilenso/honeysql-postgres {:mvn/version "0.2.3"}
