@@ -7,6 +7,7 @@
             [com.stuartsierra.component :as component]
             [system.components.sente :refer [new-channel-socket-server]]
             [clojure.tools.logging :as log]
+            [clojure.core.async :refer [go]]
             [taoensso.sente.server-adapters.immutant :refer (get-sch-adapter)]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22,22 +23,24 @@
 (rf/reg-event-fx
  ::trigger
  [(rf/inject-cofx :system)]
- (fn [{:keys [db system]} [_ data]]
+ (fn [{:keys [db system]} [_ data ?reply-fn]]
+   (info "fn is trigger" (fn? ?reply-fn))
    {::request {:data data
-               :component system}
+               :component system
+               :?reply-fn ?reply-fn}
     :db db}))
 
 (rf/reg-event-db
  :chsk/ws-ping
  (fn [db _]
-  (println "ping received")
-  db))
+   (println "ping received")
+   db))
 
 (rf/reg-event-fx
  ::broadcast
  (fn [{db :db} [_ data]]
-  {::broadcast data
-   :db db}))
+   {::broadcast data
+    :db db}))
 
 (defn broadcast [chsk-send! connected-uids data]
   (println "connected uids are " connected-uids)
@@ -46,9 +49,9 @@
     (chsk-send! uid [::data data])))
 
 (defn event-msg-handler [component]
-  (fn [ev-msg]
-    (info "recevied a message ev-msg " (:event ev-msg))
-    (rf/dispatch (:event ev-msg))))
+  (fn [{:keys [event ?reply-fn] :as ev-msg}]
+    (info "recevied a message ev-msg " (some? event))
+    (rf/dispatch-sync (conj event ?reply-fn))))
 
 (defn sente-routes [{{{:keys [ring-ajax-get-or-ws-handshake ring-ajax-post]} :comm} ::comm}]
   (routes

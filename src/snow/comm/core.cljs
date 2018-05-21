@@ -31,7 +31,7 @@
 ;;     :db db}))
 
 (defn query-handler [chsk-send! {:keys [data on-success on-failure] :as q}]
-  (println "go " data (fn? chsk-send!))
+  (println "go " (fn? chsk-send!))
   (chsk-send! data
               8000
               (fn [reply]
