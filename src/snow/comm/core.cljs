@@ -14,7 +14,7 @@
         (sente/make-channel-socket! "/chsk" ; Note the same path as before
                                     {:type :auto
                                      :protocol :http
-                                     :host "localhost:8000"})] ; e/o #{:auto :ajax :ws}
+                                     })] ; e/o #{:auto :ajax :ws}
     (def chsk       chsk)
     (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
     (def chsk-send! send-fn) ; ChannelSocket's send API fn

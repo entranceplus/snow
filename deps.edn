@@ -39,6 +39,7 @@
         cider/cider-nrepl {:mvn/version "0.18.0-SNAPSHOT"}
         org.clojure/tools.logging {:mvn/version "0.4.1"}
         org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
+ :mvn/repos {"jboss" {:url "http://repository.jboss.org/nexus/content/groups/public/"}}
  :paths ["src"]
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
