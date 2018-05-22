@@ -7,8 +7,8 @@
         conman {:mvn/version "0.6.8"}
         org.clojure/core.async {:mvn/version "0.4.474"}
         com.taoensso/sente {:mvn/version "1.12.0"}
-        re-frame {:mvn/version "0.10.5"
-                  ;; :local/root "../re-frame"}
+        re-frame {:mvn/version "0.10.5"}
+        ;; :local/root "../re-frame"}
         expound {:mvn/version "0.5.0"}
         nilenso/honeysql-postgres {:mvn/version "0.2.3"}
         honeysql {:mvn/version "0.9.1"}
@@ -39,7 +39,7 @@
                                       :sha "d492e97259c013ba401c5238842cd3445839d020"}
         cider/cider-nrepl {:mvn/version "0.18.0-SNAPSHOT"}
         org.clojure/tools.logging {:mvn/version "0.4.1"}
-        org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
+        org.clojure/tools.nrepl} {:mvn/version "0.2.12"}
  :paths ["src"]
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
