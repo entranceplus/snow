@@ -20,7 +20,7 @@
  {:appenders {:spit (appenders/spit-appender {:fname (:log config)})}})
 
 (defn system []
-  (-> @state ::sys/repl first))
+  (-> @state ::sys/repl))
 
 (ds/defn-spec start-systems
   {::s/args (s/cat :config ::sys/systems)}
