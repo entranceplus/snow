@@ -9,12 +9,10 @@
 
 ;; websocket setup
 (defn start-socket []
-  (println "connecting to wsa")
+  (println "connecting to wssss")
   (let [{:keys [chsk ch-recv send-fn state] :as socket}
         (sente/make-channel-socket! "/chsk" ; Note the same path as before
-                                    {:type :auto
-                                     :protocol :http
-                                     })] ; e/o #{:auto :ajax :ws}
+                                    {:type :auto})] ; e/o #{:auto :ajax :ws}
     (def chsk       chsk)
     (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
     (def chsk-send! send-fn) ; ChannelSocket's send API fn
