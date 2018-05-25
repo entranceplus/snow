@@ -54,11 +54,12 @@
 ;; input-view ;;
 ;;;;;;;;;;;;;;;;
 
+
 (rf/reg-event-fx
  ::new
- (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch]}]]]
+ (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch] :as m}]]]
    (cond-> {:db (assoc-in db [id type name] file-content)}
-     (vector? dispatch) (merge {:dispatch dispatch}))))
+     (vector? dispatch) (merge {:dispatch (conj dispatch file-content)}))))
 
 (defn get-files [e]
   (array-seq (.. e -target -files)))
@@ -67,7 +68,7 @@
   "read file and dispatch an event of [:file-content {:id :content}],
    will apply a process function if provided"
   [file  {:keys [id type process dispatch]}]
-  (println "Trying to read file name " (.-name file))
+  (println "Trying to read file name " (.-name file) "and will dispatch" dispatch)
   (let [reader (js/FileReader.)]
     (gobj/set reader
               "onload"
