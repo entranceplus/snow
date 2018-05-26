@@ -59,7 +59,8 @@
  ::new
  (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch] :as m}]]]
    (cond-> {:db (assoc-in db [id type name] file-content)}
-     (vector? dispatch) (merge {:dispatch (conj dispatch file-content)}))))
+     (vector? dispatch) (merge {:dispatch [(first dispatch)
+                                           (assoc (second dispatch) :file-data file-content)]}))))
 
 (defn get-files [e]
   (array-seq (.. e -target -files)))
