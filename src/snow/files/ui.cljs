@@ -68,7 +68,7 @@
 (defn read-file
   "read file and dispatch an event of [:file-content {:id :content}],
    will apply a process function if provided"
-  [file  {:keys [id type process dispatch]}]
+  [file  {:keys [id type process dispatch binary]}]
   (println "Trying to read file name " (.-name file) "and will dispatch" dispatch)
   (let [reader (js/FileReader.)]
     (gobj/set reader
@@ -79,7 +79,9 @@
                                                               (fn? process) process)
                                               :name (.-name file)
                                               :dispatch dispatch}]])))
-    (.readAsText reader file)))
+    (if (true? binary)
+      (.readAsDataURL reader file)
+      (.readAsText reader file))))
 
 
 (defn file-input [m]
