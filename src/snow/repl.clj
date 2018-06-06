@@ -49,5 +49,5 @@
 (defn start-nrepl []
   (nrepl/start-server :port (or (:repl-port config)
                                9001)
-                      :host "0.0.0.0"
+                      :host "localhost"
                       :handler cider-nrepl-handler))

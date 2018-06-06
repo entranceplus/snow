@@ -57,8 +57,10 @@
 
 (rf/reg-event-fx
  ::new
- (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch] :as m}]]]
-   (cond-> {:db (assoc-in db [id type name] file-content)}
+ (fn [{:keys [db]} [_ [type id {:keys [name file-content dispatch single?] :as m}]]]
+   (cond-> {:db (if single?
+                  (assoc-in db [id type] [name file-content])
+                  (assoc-in db [id type name] file-content))}
      (vector? dispatch) (merge {:dispatch [(first dispatch)
                                            (assoc (second dispatch) :file-data file-content)]}))))
 
@@ -68,17 +70,16 @@
 (defn read-file
   "read file and dispatch an event of [:file-content {:id :content}],
    will apply a process function if provided"
-  [file  {:keys [id type process dispatch binary]}]
+  [file  {:keys [id type process dispatch binary] :as m}]
   (println "Trying to read file name " (.-name file) "and will dispatch" dispatch)
   (let [reader (js/FileReader.)]
     (gobj/set reader
               "onload"
               (fn [e]
                 (println "event called ")
-                (rf/dispatch [::new [type id {:file-content (cond-> (.. e -target -result)
-                                                              (fn? process) process)
-                                              :name (.-name file)
-                                              :dispatch dispatch}]])))
+                (rf/dispatch [::new [type id (merge m {:file-content (cond-> (.. e -target -result)
+                                                                       (fn? process) process)
+                                                       :name (.-name file)})]])))
     (if (true? binary)
       (.readAsDataURL reader file)
       (.readAsText reader file))))
