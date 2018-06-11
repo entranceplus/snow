@@ -50,7 +50,7 @@
 
 (defn event-msg-handler [component]
   (fn [{:keys [event ?reply-fn] :as ev-msg}]
-    (info "recevied a message ev-msg ")
+    (info "recevied a message ev-msg1 " (first event)) 
     (rf/dispatch (conj event ?reply-fn))))
 
 (defn sente-routes [{{{:keys [ring-ajax-get-or-ws-handshake ring-ajax-post]} :comm} ::comm}]
