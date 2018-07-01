@@ -23,6 +23,8 @@
 
 (deftask publish []
   (comp
-   (build-jar)
+   (deps)
+   (pom)
+   (jar)
    (push-release)))
 
