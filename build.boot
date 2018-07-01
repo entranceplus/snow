@@ -1,4 +1,5 @@
-(set-env! :dependencies '[[seancorfield/boot-tools-deps "0.4.5" :scope "test"]])
+(set-env! :dependencies '[[seancorfield/boot-tools-deps "0.4.5" :scope "test"]
+                          [entranceplus/bootlaces "0.1.14"]])
 
 (require '[boot-tools-deps.core :refer [deps]])
 
@@ -25,6 +26,6 @@
   (comp
    (deps)
    (pom)
-   (jar)
+   (build-jar)
    (push-release)))
 
