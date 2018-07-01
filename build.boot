@@ -4,7 +4,7 @@
 (require '[boot-tools-deps.core :refer [deps]])
 
 (def project 'snow)
-(def version "0.3.2")
+(def version "0.3.3")
 
 (task-options!
  pom {:project     project
