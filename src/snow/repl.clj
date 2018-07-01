@@ -4,7 +4,7 @@
             [taoensso.timbre.appenders.core :as appenders]
             [defn-spec.core :as ds]
             [clojure.spec.alpha :as s]
-            [clojure.tools.deps.alpha.repl :refer [add-lib]]
+            ;; [clojure.tools.deps.alpha.repl :refer [add-lib]]
             [clojure.tools.nrepl.server :as nrepl]
             [cider.nrepl :refer [cider-nrepl-handler]]
             [taoensso.timbre :as timbre]
@@ -14,7 +14,7 @@
 
 (def state (atom {}))
 
-(def add-dep add-lib)
+#_(def add-dep add-lib)
 
 (timbre/merge-config!
  {:appenders {:spit (appenders/spit-appender {:fname (:log config)})}})
