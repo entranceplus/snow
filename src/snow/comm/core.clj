@@ -59,7 +59,11 @@
    (POST "/chsk" req (ring-ajax-post                req))))
 
 (defn start-sente [event-msg-handler]
-  (component/start (new-channel-socket-server event-msg-handler (get-sch-adapter) {:wrap-component? true})))
+  (component/start (new-channel-socket-server event-msg-handler
+                                              (get-sch-adapter)
+                                              {:wrap-component? true
+                                               :user-id-fn (fn [ring-req]
+                                                             (gensym))})))
 
 (defrecord Comm [event-msg-handler broadcast request-handler init-data]
   component/Lifecycle
