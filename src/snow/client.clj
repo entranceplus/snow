@@ -18,30 +18,50 @@
   ([url] (get url nil))
   ([url opts]
    (-> url
-       (client/get (merge {:as :json
-                           ; :coerce :always
-                           :throw-exceptions false} opts))
-       :body)))
+      (client/get (merge {:as :json
+                                        ; :coerce :always
+                          :throw-exceptions false} opts))
+      :body)))
+
+(defn prepare-json-body [{body :body :as opts}]
+  (merge {:content-type :json
+          :accept :json
+          :as :json
+          :throw-exceptions false}
+         (assoc opts :body (cond-> body
+                             ((complement string?) body) write-json))))
 
 (defn post
   "simple json post"
-  [url & {:keys [body headers]}]
-  (client/post url
-               {:content-type :json
-                :accept :json
-                :as :json
-                :throw-exceptions false
-                :body (cond-> body
-                        ((complement string?) body) write-json)
-                :headers headers}))
+  ([url] (post url nil))
+  ([url {:keys [body headers] :as opts}]
+   (->> opts
+      prepare-json-body
+      (client/post url))))
 
-(defn delete [url & {:keys [headers]}]
-  (client/delete url
-                 {:accept :json
-                  :as :json
-                  :coerce :always
-                  :throw-exceptions false
-                  :headers headers}))
+(defn put
+  ([url] (put url nil))
+  ([url {body :body :as opts}]
+   (->> opts
+      prepare-json-body
+      (client/put url))))
+
+(defn patch
+  ([url] (patch nil))
+  ([url opts]
+   (->> opts
+      prepare-json-body
+      (client/patch url))))
+
+(defn delete
+  ([url] (delete url nil))
+  ([url opts]
+   (client/delete url
+                  (merge {:accept :json
+                          :as :json
+                          :coerce :always
+                          :throw-exceptions false}
+                         opts))))
 
 (defn restclient
   ([base-url]
