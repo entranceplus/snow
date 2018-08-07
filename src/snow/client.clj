@@ -10,24 +10,24 @@
 
 (defn write-json [json]
   (->> json
-       (m/encode m "application/json")
-       slurp))
+     (m/encode m "application/json")
+     slurp))
+
+(def default-opts {:content-type :json
+                   :accept :json
+                   :as :json
+                   :throw-exceptions false})
 
 (defn get
   "simple json request"
   ([url] (get url nil))
   ([url opts]
    (-> url
-      (client/get (merge {:as :json
-                                        ; :coerce :always
-                          :throw-exceptions false} opts))
+      (client/get (merge default-opts opts))
       :body)))
 
 (defn prepare-json-body [{body :body :as opts}]
-  (merge {:content-type :json
-          :accept :json
-          :as :json
-          :throw-exceptions false}
+  (merge default-opts
          (assoc opts :body (cond-> body
                              ((complement string?) body) write-json))))
 

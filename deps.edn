@@ -47,10 +47,9 @@
  :paths ["src"]
  :pom {:group-id "com.shakdwipeea"
        :artifact-id "snow"
-       :version "0.4.0"
+       :version "0.4.1"
        :name "Quick prototyping tools"}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
                                                           :sha "5fb4fc46ad0bf2e0ce45eba5b9117a2e89166479"}}
-                  :main-opts ["-m" "cognitect.test-runner"]}
-           :meyvn {:extra-deps {org.danielsz/meyvn {:mvn/version "1.0.5"}}}}}
+                  :main-opts ["-m" "cognitect.test-runner"]}}}
