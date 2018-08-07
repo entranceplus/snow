@@ -18,6 +18,6 @@
                             (println "reying to navigate to " route params)
                             (when (some? route)
                               (b/navigate! router route params))))
-    (b/start! router {:default :voidwalker.home
+    (b/start! router {:default (or (route-map :default) :home)
                       :html5? true
                       :on-navigate on-navigate})))
