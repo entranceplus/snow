@@ -10,7 +10,8 @@
             [taoensso.timbre :as timbre]
             [snow.util :as u]))
 
-(def config (read-edn "profiles.edn"))
+(def config (try (read-edn "profiles.edn")
+                 (catch Exception e)))
 
 (def state (atom {}))
 
