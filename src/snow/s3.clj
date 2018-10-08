@@ -6,8 +6,9 @@
             [amazonica.aws.s3transfer :as s3transfer])
   (:import [com.amazonaws.services.s3.model CannedAccessControlList]))
 
-(def cred (let [{:keys [reigon aws-access-key-id aws-secret-access-key]} (profile)]
+(def cred (let [{:keys [reigon aws-access-key-id aws-secret-access-key bucket-name]} (profile)]
             {:endpoint reigon
+             :bucket-name bucket-name
              :access-key aws-access-key-id
              :secret-key aws-secret-access-key}))
 
@@ -18,7 +19,8 @@
 (defn get-bucket-name
   "will return the bucket name of the first bucket it finds in the account"
   []
-  (:name (first (s3/list-buckets cred))))
+  (or (cred :bucket-name)
+     (:name (first (s3/list-buckets cred)))))
 
 (defn read-base64 [d]
   (-> d
@@ -58,9 +60,11 @@
 
 #_(def test "into-space-2-3840x2160_44765-mm-90.jpg")
 #_(upload "junkmap" {:content "akash shakdwipeea"})
+#_(read-file "junkmap")
 
 #_(s3/get-resource-url cred (get-bucket-name) test)
 #_(upload :file-junk {:file "./build.boot"})
+
 
 #_(get-file test)
 

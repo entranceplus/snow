@@ -37,17 +37,17 @@
         com.taoensso/timbre {:mvn/version "4.10.0"}
         cider/cider-nrepl {:mvn/version "0.18.0-SNAPSHOT"}
         org.clojure/tools.logging {:mvn/version "0.4.1"}
-        amazonica {:mvn/version "0.3.121"
+        amazonica {:mvn/version "0.3.132"
                    :exclusions [com.amazonaws/aws-java-sdk]}
-        com.amazonaws/aws-java-sdk-core {:mvn/version "1.11.28"}
-        com.amazonaws/aws-java-sdk-s3 {:mvn/version "1.11.28"}
+        com.amazonaws/aws-java-sdk-core {:mvn/version "1.11.423"}
+        com.amazonaws/aws-java-sdk-s3 {:mvn/version "1.11.423"}
         org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
  :mvn/repos {"jboss" {:url "https://repository.jboss.org/nexus/content/groups/public/"}
              "jitpack" {:url "https://jitpack.io"}}
  :paths ["src"]
  :pom {:group-id "com.shakdwipeea"
        :artifact-id "snow"
-       :version "0.4.3"
+       :version "0.4.4"
        :name "Quick prototyping tools"}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
