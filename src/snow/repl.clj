@@ -15,8 +15,8 @@
 
 (def state (atom {}))
 
-(defn cljs-repl []
-  (cemerick.piggieback/cljs-repl :app))
+#_(defn cljs-repl []
+    (cemerick.piggieback/cljs-repl :app))
 
 #_(def add-dep add-lib)
 
