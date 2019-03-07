@@ -4,4 +4,5 @@
 (def read-edn (comp edn/read-string slurp))
 
 (def profile (fn []
-               (read-edn "profiles.edn")))
+               (try (read-edn "profiles.edn")
+                    (catch Exception ex {}))))
