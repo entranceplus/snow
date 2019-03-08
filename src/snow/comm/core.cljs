@@ -8,10 +8,11 @@
 
 
 ;; websocket setup
-(defn start-socket []
+(defn start-socket [csrf-token]
   (println "connecting to wssss")
   (let [{:keys [chsk ch-recv send-fn state] :as socket}
-        (sente/make-channel-socket! "/chsk" ; Note the same path as before
+        (sente/make-channel-socket! "/chsk"
+                                    csrf-token
                                     {:type :auto})] ; e/o #{:auto :ajax :ws}
     (def chsk       chsk)
     (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
@@ -90,10 +91,10 @@
 
 (defonce router_ (atom nil))
 (defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
-(defn start-router! []
+(defn start-router! [csrf-token]
   (println "Starting router ")
   (stop-router!)
-  (let [socket (start-socket)]
+  (let [socket (start-socket csrf-token)]
     (reset! router_
             (sente/start-client-chsk-router!
              (:ch-recv socket) event-msg-handler))
@@ -101,6 +102,6 @@
 
 
 
-(defn start! [] (start-router!))
+(defn start! [csrf-token] (start-router! csrf-token))
 
 ;; (defonce _start-once (start!))
