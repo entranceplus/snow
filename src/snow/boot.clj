@@ -1,29 +1,29 @@
-(ns snow.boot
-  (:gen-class)
-  (:require [ragtime.jdbc :as jdbc]
-            [ragtime.repl :as repl]
-            [snow.mysql :as mysql]
-            [clojure.edn :as edn]
-            [environ.boot :refer [environ]]
-            [boot.core :refer [deftask with-pre-wrap]]))
+;; (ns snow.boot
+;;   (:gen-class)
+;;   (:require [ragtime.jdbc :as jdbc]
+;;             [ragtime.repl :as repl]
+;;             [snow.mysql :as mysql]
+;;             [clojure.edn :as edn]
+;;             [environ.boot :refer [environ]]
+;;             [boot.core :refer [deftask with-pre-wrap]]))
 
-(defn config []
-  {:datastore  (jdbc/sql-database (mysql/get-db-spec-from-env))
-   :migrations (jdbc/load-resources "migrations")})
+;; (defn config []
+;;   {:datastore  (jdbc/sql-database (mysql/get-db-spec-from-env))
+;;    :migrations (jdbc/load-resources "migrations")})
 
-(deftask migrate
-  "Task to run a db migration"
-  []
-  (with-pre-wrap [fs]
-    (repl/migrate (config))
-    fs))
+;; (deftask migrate
+;;   "Task to run a db migration"
+;;   []
+;;   (with-pre-wrap [fs]
+;;     (repl/migrate (config))
+;;     fs))
 
-(deftask rollback
-  "Task to run a db rollback"
-  []
-  (with-pre-wrap [fs]
-    (repl/rollback (config))
-    fs))
+;; (deftask rollback
+;;   "Task to run a db rollback"
+;;   []
+;;   (with-pre-wrap [fs]
+;;     (repl/rollback (config))
+;;     fs))
 
 ;; (deftask gen-migrate
 ;;   "create a new migration"

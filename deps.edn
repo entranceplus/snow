@@ -38,19 +38,20 @@
         funcool/bide {:mvn/version "1.6.0"}
         com.taoensso/timbre {:mvn/version "4.10.0"}
         cider/cider-nrepl {:mvn/version "0.21.1"}
+        cider/piggieback {:mvn/version "0.4.1-SNAPSHOT"}
         org.clojure/tools.logging {:mvn/version "0.4.1"}
         amazonica {:mvn/version "0.3.132"
                    :exclusions [com.amazonaws/aws-java-sdk]}
         org.java-websocket/Java-WebSocket {:mvn/version "1.4.0"}
         com.amazonaws/aws-java-sdk-core {:mvn/version "1.11.423"}
         com.amazonaws/aws-java-sdk-s3 {:mvn/version "1.11.423"}
-        org.clojure/tools.nrepl {:mvn/version "0.2.12"}}
+        nrepl {:mvn/version "0.4.0"}}
  :mvn/repos {"jboss" {:url "https://repository.jboss.org/nexus/content/groups/public/"}
              "jitpack" {:url "https://jitpack.io"}}
  :paths ["src" "dev"]
  :pom {:group-id "com.shakdwipeea"
        :artifact-id "snow"
-       :version "0.4.8"
+       :version "0.4.9"
        :name "Quick prototyping tools"}
  :aliases {:test {:extra-paths ["test"]
                   :extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"

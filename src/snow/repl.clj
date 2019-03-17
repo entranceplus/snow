@@ -1,17 +1,16 @@
 (ns snow.repl
   (:require [snow.systems :as sys]
-            [snow.env :refer [read-edn]]
+            [snow.env :as e]
             [taoensso.timbre.appenders.core :as appenders]
             [defn-spec.core :as ds]
             [clojure.spec.alpha :as s]
             ;; [clojure.tools.deps.alpha.repl :refer [add-lib]]
-            [clojure.tools.nrepl.server :as nrepl]
+            [nrepl.server :as nrepl]
             [cider.nrepl :refer [cider-nrepl-handler]]
             [taoensso.timbre :as timbre]
             [snow.util :as u]))
 
-(def config (try (read-edn "profiles.edn")
-                 (catch Exception e)))
+(def config (e/profile))
 
 (def state (atom {}))
 
@@ -41,7 +40,7 @@
 
 (defn start!
   ([f]
-   (start! f (read-edn "profiles.edn")))
+   (start! f (e/profile)))
   ([fn config]
    (start-systems (if (coll? fn)
                     (map #(-> % (sys-map config)) fn)
@@ -53,5 +52,4 @@
 (defn start-nrepl []
   (nrepl/start-server :port (or (:repl-port config)
                                9001)
-                      :host "localhost"
                       :handler cider-nrepl-handler))
