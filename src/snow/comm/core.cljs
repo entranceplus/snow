@@ -36,9 +36,9 @@
               (fn [reply]
                 (if (sente/cb-success? reply)
                   (do (println "success sending msg")
-                      (when (vector? on-success) (rf/dispatch on-success)))
+                      (when (vector? on-success) (rf/dispatch (conj on-success reply))))
                   (do (println "error sending msg " reply)
-                      (when (vector? on-failure) (rf/dispatch on-failure)))))))
+                      (when (vector? on-failure) (rf/dispatch (conj  on-failure reply))))))))
 
 ;; (rf/dispatch [::trigger {:snow.comm.core/type :snow.db/add
 ;;                          :data 90}])
