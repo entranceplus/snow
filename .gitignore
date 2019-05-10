@@ -12,3 +12,5 @@ pom.xml.asc
 .hg/
 profiles.edn
 .cpcache
+node_modules
+resources/public/js

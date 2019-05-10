@@ -4,9 +4,7 @@
             [taoensso.timbre.appenders.core :as appenders]
             [defn-spec.core :as ds]
             [clojure.spec.alpha :as s]
-            ;; [clojure.tools.deps.alpha.repl :refer [add-lib]]
             [nrepl.server :as nrepl]
-            [cider.nrepl :refer [cider-nrepl-handler]]
             [taoensso.timbre :as timbre]
             [snow.util :as u]))
 
@@ -49,7 +47,12 @@
                        u/make-vec-if-not)))))
 
 
+(defn nrepl-handler []
+  (require 'cider.nrepl)
+  (ns-resolve 'cider.nrepl 'cider-nrepl-handler))
+
+
 (defn start-nrepl []
   (nrepl/start-server :port (or (:repl-port config)
                                9001)
-                      :handler cider-nrepl-handler))
+                      :handler (nrepl-handler)))

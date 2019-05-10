@@ -1,5 +1,4 @@
 (ns snow.systems
-  (:gen-class)
   (:require [clojure.spec.alpha :as s]
             [environ.core :refer [env]]
             [com.stuartsierra.component :as component]

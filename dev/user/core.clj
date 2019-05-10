@@ -1,6 +1,15 @@
 (ns user.core
-  (:require [cider.nrepl :refer [cider-nrepl-handler]]))
+  (:require [snow.repl :as repl]
+            [snow.server :as server]
+            [shadow.cljs.devtools.server :as shadow-server]
+            [shadow.cljs.devtools.api :as shadow]
+            ))
+
+;; (defn cljs-repl []
+;;   (cemerick.piggieback/cljs-repl :app))
 
 (defn -main [& args]
-  (nrepl.server/start-server :port 9001 :handler cider-nrepl-handler)
-  (println "nrepl started"))
+  (repl/start-nrepl)
+  (repl/start! server/system-config)
+  (shadow-server/start!)
+  (shadow/dev :app))
