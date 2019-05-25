@@ -53,15 +53,51 @@
    (GET "/" req (serve-page req))
    (ANY "*" req (serve-page req))))
 
+;; (keys m1)
+
+(rf/reg-event-db
+ :sync-data
+ (fn [db [_ [_ {:keys [:user.comm/data :user.comm/user-id] :as m} ]]]
+   (info "data" m)
+   (def m1 m)
+   (assoc-in db
+             [:sync-data (keyword  user-id)]
+             data)))
+
+
+(rf/reg-event-fx
+ :client-sync
+ (fn [{db :db} [_ user-id]]
+   (info "user id " user-id)
+   {:db db
+    ::comm/message {:user-id user-id
+                    :data [::comm/trigger [::update-db
+                                           (get-in db
+                                                   [:sync-data
+                                                    (keyword user-id)])]]}}))
+
+
+(rf/reg-sub
+ :sync-data
+ (fn [db [_]] (get db :sync-data)))
+
+(def a @(rf/subscribe [:sync-data]))
+
+(keys a)
 
 (defn request-handler [{:keys [event ?reply-fn data] :as ev-msg}]
+  (println "asdhasdhioa")
   (info "ever" event)
   (def d ev-msg)
-  (if (nil? data)
-    (rf/dispatch (conj event ?reply-fn))
-    (?reply-fn "hello")))
+  (rf/dispatch [:sync-data event])
+  ;; (when (some? ?reply-fn))
+  (?reply-fn "synced"))
 
 ;; ((:?reply-fn d) [:snow.comm.core/trigger (search-yelp (:data d))])
+
+;; (rf/dispatch [:client-sync "G__62751"])
+;; (rf/dispatch [::comm/broadcast {:dispatch [:sample-update]}])
+
 
 (defn system-config [config]
   [::comm/comm (comm/new-comm (fn [component] request-handler)

@@ -42,11 +42,17 @@
    {::broadcast data
     :db db}))
 
+
+
 (defn broadcast [chsk-send! connected-uids data]
   (println "connected uids are " connected-uids)
   (doseq [uid (:any @connected-uids)]
     (info "Sending message to client")
     (chsk-send! uid [::data data])))
+
+(defn send-client-message [chsk-send! {:keys [user-id data] :as n}]
+  (info "nat " n)
+  (chsk-send! (symbol user-id) [::data data]))
 
 (defn event-msg-handler [component]
   (fn [{:keys [event ?reply-fn] :as ev-msg}]
@@ -70,6 +76,7 @@
   (start [component]
     (let [{:keys [chsk-send! connected-uids] :as sente} (start-sente event-msg-handler)]
       (rf/reg-fx ::broadcast (partial broadcast chsk-send! connected-uids))
+      (rf/reg-fx ::message (partial send-client-message chsk-send!))
       (rf/reg-fx ::request request-handler)
       (rf/reg-cofx :system (fn [coeffects]
                              (assoc coeffects :system component))) 

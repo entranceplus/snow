@@ -25,4 +25,4 @@ jobs:
           paths:
             - ~/.m2
           key: snow-{{checksum "deps.edn"}}
-      - run: boot publish
+      # - run: boot publish

@@ -30,7 +30,7 @@
 ;;     :db db}))
 
 (defn query-handler [chsk-send! {:keys [data on-success on-failure] :as q}]
-  (println "go " (fn? chsk-send!))
+  (println "go " data)
   (chsk-send! data
               8000
               (fn [reply]
@@ -38,7 +38,8 @@
                   (do (println "success sending msg")
                       (when (vector? on-success) (rf/dispatch (conj on-success reply))))
                   (do (println "error sending msg " reply)
-                      (when (vector? on-failure) (rf/dispatch (conj  on-failure reply))))))))
+                      (when (vector? on-failure)
+                        (rf/dispatch (conj  on-failure reply))))))))
 
 ;; (rf/dispatch [::trigger {:snow.comm.core/type :snow.db/add
 ;;                          :data 90}])
@@ -64,7 +65,7 @@
 (rf/reg-event-fx
  :chsk/recv
  (fn [{db :db} [_ {:as ev-msg :keys [?data]}]]
-   (->output! "Push event from server:")
+   (->output! "Push event from server: " ev-msg)
    (let [data (-> ?data second :dispatch)]
      (cond-> {:db db}
        (boolean data) (merge {:dispatch data})))))
@@ -82,7 +83,9 @@
  (fn [{db :db} [_ {:as ev-msg :keys [?data]}]]
    (let [[old-state-map new-state-map] (have vector? ?data)]
      (println "socket state change " new-state-map)
-     {:db (assoc db ::connected (:open? new-state-map))})))
+     {:db (assoc db
+                 ::connected (:open? new-state-map)
+                 ::user-id (:uid new-state-map))})))
 
 (def data "ok")
 
