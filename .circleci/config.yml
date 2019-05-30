@@ -2,27 +2,31 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
-jobs:
-  build:
-    working_directory: ~/snow
-    docker:
-      # specify the version you desire here
-      - image: circleci/clojure:boot
-    environment:
-      JVM_OPTS: -Xmx3200m
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+workflows:
+  version: 2
+  jobs:
+    build:
+      filters:
+        branches:
+           only: master
+      working_directory: ~/snow
+      docker:
+        # specify the version you desire here
+        - image: circleci/clojure:boot
+      environment:
+        JVM_OPTS: -Xmx3200m
+        # Specify service dependencies here if necessary
+        # CircleCI maintains a library of pre-built images
+        # documented at https://circleci.com/docs/2.0/circleci-images/
+        # - image: circleci/mongo:3.4.4
 
-    steps:
-      - checkout
-      - restore_cache:
-          key: snow-{{checksum "deps.edn"}}
-      - run: boot build
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: snow-{{checksum "deps.edn"}}
-      # - run: boot publish
+      steps:
+        - checkout
+        - restore_cache:
+            key: snow-{{checksum "deps.edn"}}
+        - run: boot build
+        - save_cache:
+            paths:
+              - ~/.m2
+            key: snow-{{checksum "deps.edn"}}
+        - run: boot publish
